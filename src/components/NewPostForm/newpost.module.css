@@ -1,0 +1,130 @@
+.main {
+  width: 100%;
+}
+
+.form {
+  width: 780px;
+  max-width: 100%;
+  border-radius: 8px;
+  background: var(--dark-gray);
+  padding: 24px;
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) 330px;
+  gap: 24px;
+}
+
+.uploadColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.preview {
+  margin: 0;
+  border-radius: 8px;
+  background: var(--light-gray);
+  padding: 16px;
+}
+
+.preview img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  display: block;
+  border-radius: 4px;
+}
+
+.uploadButton {
+  border: 1px solid var(--medium-gray);
+  border-radius: 8px;
+  color: var(--offwhite);
+  text-align: center;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.uploadColumn input[type="file"] {
+  display: none;
+}
+
+.fileName {
+  color: var(--medium-gray);
+  font-size: 13px;
+  margin: 0;
+}
+
+.fieldsColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fieldsColumn h1 {
+  color: var(--offwhite);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 150%;
+  margin: 0 0 20px;
+}
+
+.fieldsColumn label {
+  color: var(--offwhite);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 150%;
+}
+
+.fieldsColumn textarea {
+  min-height: 128px;
+  resize: vertical;
+  font-size: 15px;
+  border-radius: 4px;
+  padding: 8px 16px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 30px;
+}
+
+.tags button {
+  background: var(--medium-gray);
+  color: var(--dark-gray);
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.message {
+  font-size: 14px;
+  line-height: 150%;
+  margin: 0;
+}
+
+.error {
+  color: #ff8a8a;
+}
+
+.success {
+  color: var(--highlight-green);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.actions button {
+  min-width: 140px;
+}
+
+@media (max-width: 999px) {
+  .form {
+    grid-template-columns: 1fr;
+  }
+}
