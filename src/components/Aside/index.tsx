@@ -51,6 +51,12 @@ export function Aside() {
               Visão técnica
             </AsideLink>
           </li>
+          <li>
+            <AsideLink href="/decisoes-tecnicas">
+              <IconInfo />
+              Decisões técnicas
+            </AsideLink>
+          </li>
           {!isLoading && (
             <li>
               {isAuthenticated ? (

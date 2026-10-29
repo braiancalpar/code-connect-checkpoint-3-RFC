@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/components/AuthProvider";
+import { FeatureFlagsProvider } from "@/lib/feature-flags/FeatureFlagsProvider";
+import { ObservabilityProvider } from "@/lib/observability/ObservabilityProvider";
 
 export const metadata: Metadata = {
   title: "CodeConnect",
@@ -14,7 +16,11 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body>
-        <AuthProvider>{children}</AuthProvider>
+        <ObservabilityProvider>
+          <FeatureFlagsProvider>
+            <AuthProvider>{children}</AuthProvider>
+          </FeatureFlagsProvider>
+        </ObservabilityProvider>
       </body>
     </html>
   );

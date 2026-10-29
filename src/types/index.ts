@@ -28,7 +28,7 @@ export interface Comment {
 export interface Post {
   id: number;
   cover: string;
-  imageUrl?: string;
+  imageUrl?: string | null;
   title: string;
   slug: string;
   body: string;

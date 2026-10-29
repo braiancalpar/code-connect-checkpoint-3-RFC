@@ -71,6 +71,7 @@ Repositório: `https://github.com/alura-cursos/code-connect--backend`
 - `/sobre` — página institucional;
 - `/usuarios/[id]` — perfil público derivado dos projetos do autor;
 - `/visao-tecnica` — decisões, pontos fortes e limitações;
+- `/decisoes-tecnicas` — decisões arquiteturais, flags e eventos locais da PoC;
 - `/auth/login` e `/auth/register`.
 
 ### Privadas
@@ -109,7 +110,14 @@ Os testes verificam:
 6. distinção entre sessão inválida e indisponibilidade do backend;
 7. invalidação de cache após publicação;
 8. validação dos campos obrigatórios de publicação;
-9. exibição do erro devolvido por um login inválido.
+9. fluxo do formulário de login até a resposta de erro da API;
+10. carregamento da sessão e interação de curtida no card de post, com snapshot
+    do markup;
+11. configuração persistente de feature flags e fallback para configuração
+    inválida;
+12. captura e consulta local de erros, Web Vitals e evento do feed;
+13. validação da resposta de posts contra os campos documentados e os tipos
+    consumidos pelo frontend.
 
 ## Comandos
 
@@ -129,7 +137,10 @@ npm test
 - rascunhos ainda não possuem persistência no backend;
 - as tags do formulário são apenas uma demonstração visual, pois o backend atual não oferece esse campo;
 - provedores Google e GitHub são apenas elementos visuais desabilitados;
-- não há paginação, observabilidade ou testes end-to-end completos;
+- não há paginação nem testes end-to-end completos;
+- as feature flags e a observabilidade em `/decisoes-tecnicas` são locais ao
+  navegador/sessão; não oferecem rollout compartilhado nem monitoramento de
+  produção;
 - o frontend depende de o backend estar disponível para revalidar páginas e executar operações.
 
 ## O que seria necessário para produção

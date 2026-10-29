@@ -5,11 +5,19 @@ import { ModalComment } from "@/components/ModalComment";
 import { ThumbsUpButton } from "./ThumbsUpButton";
 import { useAuth } from "@/components/AuthProvider";
 import { usePostInteractions } from "@/features/posts/usePostInteractions";
+import { useFeatureFlags } from "@/lib/feature-flags/FeatureFlagsProvider";
 import type { Post } from "@/types";
 import styles from "./cardpost.module.css";
 
-export function CardPost({ post }: { post: Post }) {
+export function CardPost({
+  post,
+  isFirstPost = false,
+}: {
+  post: Post;
+  isFirstPost?: boolean;
+}) {
   const { isAuthenticated } = useAuth();
+  const { flags } = useFeatureFlags();
   const { likes, comments, isLiking, interactionError, like, addComment } =
     usePostInteractions({
       postId: post.id,
@@ -18,7 +26,10 @@ export function CardPost({ post }: { post: Post }) {
     });
 
   return (
-    <article className={styles.card}>
+    <article
+      className={styles.card}
+      data-feed-first-post={isFirstPost ? "true" : undefined}
+    >
       <header className={styles.header}>
         <figure className={styles.figure}>
           {post.cover && (
@@ -31,6 +42,9 @@ export function CardPost({ post }: { post: Post }) {
       </header>
       <section className={styles.body}>
         <h2>{post.title}</h2>
+        {flags.showPostHighlight && (
+          <span className={styles.highlight}>Destaque experimental</span>
+        )}
         <p>{post.body}</p>
         <NextLink href={`/blog-post/${post.slug}`}>Ver detalhes</NextLink>
       </section>

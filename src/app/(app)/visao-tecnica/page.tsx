@@ -45,11 +45,12 @@ export default function TechnicalVisionPage() {
         <h2>Limitações</h2>
         <p>
           A PoC ainda depende do backend local e do armazenamento de imagens
-          dele. Não há refresh token, observabilidade, paginação nem cobertura
-          completa de testes end-to-end. Rascunhos e tags também não possuem
-          persistência. O perfil público depende dos dados de autoria presentes
-          nos projetos, pois o backend não oferece uma consulta pública de
-          usuário.
+          dele. Não há refresh token, paginação nem cobertura completa de testes
+          end-to-end. A observabilidade e as feature flags desta evolução são
+          demonstrações locais, sem monitoramento de produção ou rollout
+          compartilhado. Rascunhos e tags também não possuem persistência. O
+          perfil público depende dos dados de autoria presentes nos projetos,
+          pois o backend não oferece uma consulta pública de usuário.
         </p>
       </section>
     </main>

@@ -5,15 +5,11 @@ import { LoginForm } from "./index";
 afterEach(() => vi.unstubAllGlobals());
 describe("LoginForm", () => {
   it("exibe a mensagem retornada por credenciais inválidas", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi
-        .fn()
-        .mockResolvedValue({
-          ok: false,
-          json: async () => ({ message: "Credenciais inválidas" }),
-        }),
-    );
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: false,
+      json: async () => ({ message: "Credenciais inválidas" }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
     render(<LoginForm />);
     const user = userEvent.setup();
     await user.type(screen.getByLabelText("E-mail"), "teste@exemplo.com");
@@ -21,6 +17,17 @@ describe("LoginForm", () => {
     await user.click(screen.getByRole("button", { name: /login/i }));
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Credenciais inválidas",
+    );
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/auth/login",
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify({
+          email: "teste@exemplo.com",
+          password: "senha-errada",
+          remember: false,
+        }),
+      }),
     );
   });
 });

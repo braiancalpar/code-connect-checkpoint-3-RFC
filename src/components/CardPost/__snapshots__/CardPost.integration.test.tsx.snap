@@ -1,0 +1,161 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`CardPost integration > loads the session, submits a like, updates the count and matches the visual baseline 1`] = `
+<DocumentFragment>
+  <article
+    class="_card_6d5577"
+  >
+    <header
+      class="_header_6d5577"
+    >
+      <figure
+        class="_figure_6d5577"
+      >
+        <img
+          alt="Capa do post de título: Projeto integrado"
+          src="https://example.test/cover.png"
+        />
+      </figure>
+    </header>
+    <section
+      class="_body_6d5577"
+    >
+      <h2>
+        Projeto integrado
+      </h2>
+      <p>
+        Descrição do projeto
+      </p>
+      <a
+        href="/blog-post/projeto-integrado"
+      >
+        Ver detalhes
+      </a>
+    </section>
+    <footer
+      class="_footer_6d5577"
+    >
+      <div
+        class="_actions_6d5577"
+      >
+        <div
+          class="_action_6d5577"
+        >
+          <button
+            class="_btn_c8886f"
+            title="Curtir"
+          >
+            <svg
+              fill="none"
+              height="21"
+              viewBox="0 0 23 21"
+              width="23"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M22.5 10V12C22.5 12.3 22.4 12.6 22.3 12.8L19.3 19.8C19 20.6 18.4 21 17.5 21H8.5C7.4 21 6.5 20.1 6.5 19V9C6.5 8.5 6.7 8 7.1 7.6L13.7 1L14.7 2.1C15 2.3 15.2 2.7 15.2 3.1V3.4L14.2 8H20.5C21.6 8 22.5 8.9 22.5 10ZM0.5 21V9H4.5V21H0.5Z"
+                fill="#888888"
+              />
+            </svg>
+          </button>
+          <p>
+            6
+          </p>
+        </div>
+        <div
+          class="_action_6d5577"
+        >
+          <dialog
+            class="_dialog_81f51c"
+          >
+            <header
+              class="_header_81f51c"
+            >
+              <button
+                aria-label="Fechar modal"
+                type="button"
+              >
+                ×
+              </button>
+            </header>
+            <form>
+              <h2
+                class="_subheading_7380c8"
+              >
+                Deixe seu comentário sobre o post:
+              </h2>
+              <textarea
+                class="_textarea_def569"
+                name="text"
+                placeholder="Digite aqui..."
+                required=""
+                rows="8"
+              />
+              <div
+                class="_footer_0b6156"
+              >
+                <button
+                  class="_btn_92b532"
+                  type="submit"
+                >
+                  Comentar 
+                  <svg
+                    fill="none"
+                    height="13"
+                    viewBox="0 0 14 13"
+                    width="14"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M7 0.488281L13.0117 6.5L7 12.5117L5.94531 11.457L10.1289 7.23828H0.988281V5.76172H10.1289L5.94531 1.54297L7 0.488281Z"
+                      fill="#132E35"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </form>
+          </dialog>
+          <button
+            class="_btn_c8886f"
+            title="Comentar"
+            type="button"
+          >
+            <svg
+              fill="none"
+              height="20"
+              viewBox="0 0 20 20"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16 6.01562V4H4V6.01562H16ZM12.0156 12.0156V10H4V12.0156H12.0156ZM4 7V9.01562H16V7H4ZM18.0156 0.015625C18.5469 0.015625 19 0.21875 19.375 0.625C19.7812 1 19.9844 1.45313 19.9844 1.98438V13.9844C19.9844 14.5156 19.7812 14.9844 19.375 15.3906C19 15.7969 18.5469 16 18.0156 16H4L0.015625 19.9844V1.98438C0.015625 1.45313 0.203125 1 0.578125 0.625C0.984375 0.21875 1.45312 0.015625 1.98438 0.015625H18.0156Z"
+                fill="#888888"
+              />
+            </svg>
+          </button>
+          <p>
+            0
+          </p>
+        </div>
+      </div>
+      <ul
+        class="_author_b54236"
+      >
+        <li>
+          <div
+            class="_container_529f5d"
+          />
+        </li>
+        <li>
+          <a
+            href="/usuarios/author-1"
+            style="color: inherit; text-decoration: none;"
+          >
+            @autora
+          </a>
+        </li>
+      </ul>
+    </footer>
+  </article>
+</DocumentFragment>
+`;

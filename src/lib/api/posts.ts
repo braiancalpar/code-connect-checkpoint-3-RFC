@@ -1,4 +1,5 @@
 import { BackendError, backendFetch, normalizePost } from "./backend";
+import { assertPostContract, PostContractError } from "./post-contract";
 import {
   authorPostsCacheTag,
   postCacheTag,
@@ -13,18 +14,22 @@ export async function getPosts(authorId?: string): Promise<Post[]> {
     POSTS_CACHE_TAG,
     ...(authorId ? [authorPostsCacheTag(authorId)] : []),
   ];
-  const posts = await backendFetch<Post[]>(`blog-posts${query}`, {
+  const response = await backendFetch<unknown>(`blog-posts${query}`, {
     next: {
       revalidate: PUBLIC_CONTENT_REVALIDATE_SECONDS,
       tags,
     },
   });
-  return posts.map(normalizePost);
+  if (!Array.isArray(response)) throw new PostContractError("posts");
+  return response.map((post) => {
+    assertPostContract(post);
+    return normalizePost(post);
+  });
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   try {
-    const post = await backendFetch<Post>(
+    const response = await backendFetch<unknown>(
       `blog-posts/slug/${encodeURIComponent(slug)}`,
       {
         next: {
@@ -33,7 +38,8 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
         },
       },
     );
-    return normalizePost(post);
+    assertPostContract(response);
+    return normalizePost(response);
   } catch (error) {
     if (error instanceof BackendError && error.status === 404) return null;
     throw error;

@@ -1,5 +1,5 @@
 .card {
-  width: 486px;
+  width: 432px;
   border-radius: 8px;
   background: var(--dark-gray);
 }
@@ -40,6 +40,16 @@
   font-weight: 600;
   line-height: 150%;
   margin: 0;
+}
+
+.highlight {
+  align-self: flex-start;
+  padding: 3px 8px;
+  border-radius: 12px;
+  background: var(--highlight-green);
+  color: var(--dark-gray);
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .body p {

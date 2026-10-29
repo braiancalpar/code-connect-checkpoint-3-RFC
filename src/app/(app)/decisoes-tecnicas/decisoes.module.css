@@ -1,0 +1,48 @@
+.page {
+  display: grid;
+  gap: 24px;
+  max-width: 900px;
+  padding-bottom: 56px;
+  color: var(--light-gray);
+}
+
+.page > h1 {
+  margin: 0;
+  color: var(--highlight-green);
+}
+
+.intro {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.decisions {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.decision {
+  display: grid;
+  gap: 12px;
+  padding: 20px;
+  border-radius: 8px;
+  background: var(--dark-gray);
+  line-height: 1.6;
+}
+
+.decision h2,
+.decision p {
+  margin: 0;
+}
+
+.decision dt {
+  font-weight: 700;
+  color: var(--highlight-green);
+}
+
+.decision dd {
+  margin: 0;
+}
