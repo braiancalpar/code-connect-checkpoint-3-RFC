@@ -1,21 +1,31 @@
-# CodeConnect — Checkpoint React Nível 2
+# CodeConnect — Evolução arquitetural do Frontend (Nível 3)
 
-Migração da base original em **React + Vite** para **Next.js com App Router e TypeScript**, mantendo a comunicação com o backend oficial do CodeConnect e reutilizando os componentes visuais, CSS Modules e imagens da aplicação anterior.
+Frontend **Next.js 15, React 19 e TypeScript** para compartilhar projetos e
+conhecimento em programação. Esta etapa evolui o checkpoint anterior de forma
+incremental, preservando o App Router, o backend oficial, os contratos atuais,
+os componentes e os estilos existentes.
 
-## Problemas tratados
+## O que esta etapa demonstra
 
-A base carregava feed, detalhes e perfil somente no navegador, depois da execução do JavaScript. A autenticação armazenava JWT e usuário no `localStorage`, enquanto a proteção das rotas acontecia apenas por um componente React.
+- Uma rota navegável `/decisoes-tecnicas` registra decisões, contexto,
+  alternativas, consequências e status.
+- Uma PoC de feature flags controla um destaque opcional no feed. A configuração
+  é editável em `/decisoes-tecnicas`, persiste no navegador e não exige alteração
+  de código ou novo deploy da aplicação.
+- Um adaptador local captura erros não tratados, métricas LCP/CLS/INP e o evento
+  de negócio `feed-first-post-visible`. Os eventos são consultáveis durante a
+  sessão.
+- Respostas de posts são validadas no limite de integração da API e cobertas por
+  testes de contrato baseados na documentação existente.
+- Testes cobrem fluxos de autenticação e interação com posts, configuração e
+  fallback de flags, observabilidade e snapshot do card.
+- O layout do feed distribui os cards com espaçamento consistente e alinhamento
+  vertical dos rodapés.
 
-Nesta PoC:
-
-- o feed e os detalhes são renderizados no servidor;
-- o conteúdo público usa cache com revalidação de 60 segundos e invalidação após mutações;
-- as rotas privadas são verificadas pelo middleware e novamente no servidor;
-- o JWT fica em cookie `HttpOnly`;
-- o navegador chama rotas internas do Next.js, que encaminham as operações protegidas ao backend;
-- os contratos principais foram convertidos para TypeScript;
-- UI, hooks de comportamento, sessão, acesso a dados e regras de validação foram separados;
-- há testes de acesso, redirecionamento, cookie, BFF, estado de formulário e erro de login.
+Flags e observabilidade são **provas de conceito locais**, não serviços de
+produção. A flag afeta somente a interface: autorização continua sendo
+responsabilidade do backend. Nenhum endpoint, payload ou lógica do backend foi
+alterado.
 
 ## Arquitetura
 
@@ -29,10 +39,17 @@ src/
 ├── features/posts/             # Hooks e regras específicas de publicação/interação
 ├── lib/api/                    # Comunicação server-side com o backend
 ├── lib/auth/                   # Sessão, cookie e controle de acesso
+├── lib/feature-flags/           # Avaliação e persistência local das flags
+├── lib/observability/           # Captura local de eventos e Web Vitals
 ├── tests/                      # Configuração dos testes
 ├── types/                      # Contratos de usuário, post e comentário
 └── middleware.ts               # Redirecionamento antecipado de rotas privadas
 ```
+
+`src/app` usa o App Router; `src/components` mantém a UI compartilhada; a
+integração da API e a validação de respostas ficam em `src/lib/api`. A
+documentação de decisões está em [`docs/RFC.md`](docs/RFC.md), e as orientações
+para contribuir estão em [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Pré-requisitos
 
@@ -94,13 +111,45 @@ O middleware melhora a experiência redirecionando requisições sem cookie e pr
 
 Feed, detalhes e perfis públicos são renderizados no servidor e revalidados a cada 60 segundos. Publicação, curtidas e alterações em comentários invalidam a tag compartilhada dos projetos, permitindo que o próximo acesso recupere dados atuais. Sessão e operações privadas permanecem com `no-store`.
 
+## Feature flags e observabilidade
+
+A PoC possui uma flag (`showPostHighlight`) avaliada por um provider
+centralizado. O estado padrão é desativado; configuração local inválida ou
+indisponível mantém as funcionalidades opcionais desativadas. A persistência é
+local ao navegador e não dá suporte a segmentação, configuração central ou
+rollout entre usuários.
+
+Na rota `/decisoes-tecnicas`, a checkbox **Destacar posts no feed** ativa ou
+desativa o destaque experimental no feed. **Restaurar padrão** desativa a flag.
+A configuração é armazenada no `localStorage` deste navegador; não é
+compartilhada com outras pessoas e não concede acesso a operações ou dados.
+O painel **Eventos desta sessão** consulta e limpa os eventos que permanecem em
+memória enquanto a aplicação está aberta.
+
+O adaptador local registra erros sem incluir mensagens, tokens, credenciais ou
+conteúdo do usuário. `web-vitals` coleta LCP, CLS e INP no navegador. O evento
+`feed-first-post-visible` registra o tempo até o primeiro card ficar visível.
+Os dados ficam em memória e podem ser vistos em `/decisoes-tecnicas`; não são
+enviados a um serviço remoto, preservados entre sessões nem monitorados em
+produção.
+
+## Contrato da API
+
+A integração de leitura de posts verifica os campos usados pelo frontend com
+base na documentação em `docs/code-connect-swagger-api`. A API real foi
+consultada durante esta etapa: `GET /blog-posts` respondeu com 14 posts e
+`imageUrl: null` em todos eles. Embora a documentação local descreva `imageUrl`
+como não nulo, o frontend aceita o valor nulo observado; `cover` continua
+obrigatório. Essa validação e suas fixtures protegem o contrato consumido pelo
+frontend, mas não garantem que futuras respostas da API sejam válidas.
+
 ## Testes
 
 ```bash
 npm test
 ```
 
-Os testes verificam:
+Os testes verificam (28 testes em 13 arquivos na validação desta etapa):
 
 1. classificação de rotas públicas e privadas;
 2. redirecionamento real do middleware com preservação do destino;
@@ -118,6 +167,9 @@ Os testes verificam:
 12. captura e consulta local de erros, Web Vitals e evento do feed;
 13. validação da resposta de posts contra os campos documentados e os tipos
     consumidos pelo frontend.
+
+Os testes isolam chamadas externas onde necessário. O snapshot protege o markup
+do card, não uma comparação de pixels em diferentes navegadores.
 
 ## Comandos
 
@@ -141,7 +193,18 @@ npm test
 - as feature flags e a observabilidade em `/decisoes-tecnicas` são locais ao
   navegador/sessão; não oferecem rollout compartilhado nem monitoramento de
   produção;
+- a configuração de flags não é remota nem compartilhada entre usuários;
+- não foi feita medição controlada de bytes transferidos pela rede ou de Web
+  Vitals em usuários reais;
 - o frontend depende de o backend estar disponível para revalidar páginas e executar operações.
+
+## Métricas do build
+
+O relatório de `npm run build` após esta etapa indicou **102 kB** de JavaScript
+compartilhado; First Load JS de **111 kB** para o feed, **105 kB** para
+`/decisoes-tecnicas` e **144 kB** para detalhes de post. Esses valores são os
+relatados pelo Next.js para os artefatos compilados; não equivalem a bytes
+transferidos pela rede nem a medições de performance em runtime.
 
 ## O que seria necessário para produção
 
