@@ -99,6 +99,7 @@
 .tabs a {
   color: var(--highlight-green);
   font-weight: 600;
+  text-decoration: none;
 }
 
 .grid {
