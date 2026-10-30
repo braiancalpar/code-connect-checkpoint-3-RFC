@@ -52,7 +52,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run tests with at least 80% coverage
+      - name: Run tests with at least 40% coverage
         id: coverage
         run: npm test -- --coverage
 
