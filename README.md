@@ -151,7 +151,7 @@ npm test -- --coverage
 ```
 
 O Vitest usa `@vitest/coverage-v8` para gerar relatórios em `coverage/` e exige
-no mínimo 80% de cobertura em linhas, instruções, funções e branches. A
+no mínimo 40% de cobertura em linhas, instruções, funções e branches. A
 cobertura atual ainda está abaixo desse limite; o comando com cobertura falha
 até que a suite alcance os limiares configurados.
 
