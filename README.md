@@ -147,29 +147,47 @@ frontend, mas não garantem que futuras respostas da API sejam válidas.
 
 ```bash
 npm test
+npm test -- --coverage
 ```
 
-Os testes verificam (28 testes em 13 arquivos na validação desta etapa):
+O Vitest usa `@vitest/coverage-v8` para gerar relatórios em `coverage/` e exige
+no mínimo 80% de cobertura em linhas, instruções, funções e branches. A
+cobertura atual ainda está abaixo desse limite; o comando com cobertura falha
+até que a suite alcance os limiares configurados.
+
+Os testes verificam (30 testes em 13 arquivos após as mudanças):
 
 1. classificação de rotas públicas e privadas;
 2. redirecionamento real do middleware com preservação do destino;
 3. rejeição de destinos externos após autenticação;
-4. criação do cookie de sessão `HttpOnly` sem exposição do JWT no corpo;
-5. bloqueio de publicação sem sessão e encaminhamento server-side do bearer token;
-6. distinção entre sessão inválida e indisponibilidade do backend;
-7. invalidação de cache após publicação;
-8. validação dos campos obrigatórios de publicação;
-9. fluxo do formulário de login até a resposta de erro da API;
-10. carregamento da sessão e interação de curtida no card de post, com snapshot
+4. rejeição de credenciais pela API sem criação de cookie de sessão;
+5. criação do cookie de sessão `HttpOnly` sem exposição do JWT no corpo;
+6. bloqueio de publicação sem sessão e confirmação de que o backend não é chamado;
+7. distinção entre sessão inválida e indisponibilidade do backend;
+8. criação de publicação e invalidação do cache do feed após sucesso;
+9. validação dos campos obrigatórios de publicação;
+10. envio de credenciais válidas e apresentação de erros no formulário de login;
+11. carregamento da sessão e interação de curtida no card de post, com snapshot
     do markup;
-11. configuração persistente de feature flags e fallback para configuração
+12. configuração persistente de feature flags e fallback para configuração
     inválida;
-12. captura e consulta local de erros, Web Vitals e evento do feed;
-13. validação da resposta de posts contra os campos documentados e os tipos
+13. captura e consulta local de erros, Web Vitals e evento do feed;
+14. validação da resposta de posts contra os campos documentados e os tipos
     consumidos pelo frontend.
 
 Os testes isolam chamadas externas onde necessário. O snapshot protege o markup
 do card, não uma comparação de pixels em diferentes navegadores.
+
+## Integração contínua
+
+O workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) executa em
+pushes e pull requests para `main`, usando Node.js 20 e cache npm. Ele separa
+lint/auditoria de dependências dos testes com cobertura/build, e publica o
+relatório de cobertura como artefato. A auditoria usa
+`npm audit --audit-level=high`; vulnerabilidades altas ou críticas bloqueiam
+esse job. No lockfile atual, a auditoria também identifica vulnerabilidades
+altas e críticas, então o job de segurança permanece bloqueado até a atualização
+das dependências afetadas.
 
 ## Comandos
 

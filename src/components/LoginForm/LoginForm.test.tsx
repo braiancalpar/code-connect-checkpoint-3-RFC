@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { LoginForm } from "./index";
@@ -29,5 +29,41 @@ describe("LoginForm", () => {
         }),
       }),
     );
+  });
+
+  it("envia as credenciais válidas e não exibe uma mensagem de erro", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        user: {
+          id: "user-1",
+          name: "Ada",
+          email: "ada@codeconnect.com",
+        },
+      }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    render(<LoginForm />);
+
+    const user = userEvent.setup();
+    await user.type(screen.getByLabelText("E-mail"), "ada@codeconnect.com");
+    await user.type(screen.getByLabelText("Senha"), "senha-valida");
+    await user.click(screen.getByRole("button", { name: /login/i }));
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith(
+        "/api/auth/login",
+        expect.objectContaining({
+          method: "POST",
+          body: JSON.stringify({
+            email: "ada@codeconnect.com",
+            password: "senha-valida",
+            remember: false,
+          }),
+        }),
+      );
+      expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    });
+    expect(screen.getByRole("button", { name: /login/i })).toBeEnabled();
   });
 });

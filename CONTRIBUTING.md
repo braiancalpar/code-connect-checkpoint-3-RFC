@@ -22,8 +22,18 @@ npm run build
 npm run start
 npm run lint
 npm test
+npm test -- --coverage
 npm run test:watch
 ```
+
+O Vitest gera a cobertura com `@vitest/coverage-v8` e exige ao menos 80% em
+linhas, instruções, funções e branches. A suite atual ainda não atinge esse
+limiar, portanto `npm test -- --coverage` falha até que a cobertura seja
+ampliada. O workflow `.github/workflows/ci.yml` executa lint e auditoria de
+dependências em paralelo aos testes, cobertura e build; também publica o
+relatório de cobertura como artefato. A auditoria bloqueia vulnerabilidades de
+severidade alta ou crítica. O lockfile atual ainda contém vulnerabilidades
+altas e críticas, que precisam ser corrigidas para esse job passar.
 
 O backend deve estar disponível em `http://localhost:3000` para executar a
 aplicação com dados reais. O frontend usa `http://localhost:3001`. Configure

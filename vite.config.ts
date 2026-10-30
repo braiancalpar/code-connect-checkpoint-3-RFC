@@ -12,6 +12,17 @@ export default defineConfig({
     globals: true,
     setupFiles: ["./src/tests/setup.ts"],
     css: true,
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "lcov", "json-summary"],
+      reportsDirectory: "./coverage",
+      thresholds: {
+        branches: 80,
+        functions: 80,
+        lines: 80,
+        statements: 80,
+      },
+    },
   },
   resolve: {
     alias: {

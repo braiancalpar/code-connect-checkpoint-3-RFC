@@ -8,6 +8,34 @@ afterEach(() => {
 });
 
 describe("POST /api/auth/login", () => {
+  it("deve propagar o erro quando a API rejeita as credenciais", async () => {
+    const backendFetch = vi.fn().mockResolvedValue(
+      new Response(JSON.stringify({ message: "Credenciais inválidas." }), {
+        status: 401,
+        headers: { "content-type": "application/json" },
+      }),
+    );
+    vi.stubGlobal("fetch", backendFetch);
+
+    const response = await POST(
+      new Request("http://localhost:3001/api/auth/login", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          email: "ada@codeconnect.com",
+          password: "senha-incorreta",
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(401);
+    expect(await response.json()).toEqual({
+      message: "Credenciais inválidas.",
+    });
+    expect(response.headers.get("set-cookie")).toBeNull();
+    expect(backendFetch).toHaveBeenCalledOnce();
+  });
+
   it("guarda o token em cookie HttpOnly sem expô-lo no corpo", async () => {
     const backendFetch = vi.fn().mockResolvedValue(
       new Response(

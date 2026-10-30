@@ -18,17 +18,20 @@ afterEach(() => {
 });
 
 describe("POST /api/posts", () => {
-  it("recusa publicação sem sessão", async () => {
+  it("deve recusar a publicação quando não existe sessão", async () => {
     mocks.cookies.mockResolvedValue({ get: () => undefined });
+    const backendFetch = vi.fn();
+    vi.stubGlobal("fetch", backendFetch);
 
     const response = await POST(
       new Request("http://localhost:3001/api/posts", { method: "POST" }),
     );
 
     expect(response.status).toBe(401);
+    expect(backendFetch).not.toHaveBeenCalled();
   });
 
-  it("encaminha o token somente no servidor e invalida o cache", async () => {
+  it("deve responder com sucesso e invalidar o feed quando a API confirma a publicação", async () => {
     mocks.cookies.mockResolvedValue({
       get: () => ({ value: "jwt-do-cookie" }),
     });
@@ -51,6 +54,7 @@ describe("POST /api/posts", () => {
     );
 
     expect(response.status).toBe(201);
+    expect(await response.json()).toEqual({ id: 10, slug: "novo-projeto" });
     expect(backendFetch).toHaveBeenCalledOnce();
     expect(backendFetch.mock.calls[0][0]).toMatch(/\/blog-posts$/);
     expect(backendFetch.mock.calls[0][1]).toMatchObject({
